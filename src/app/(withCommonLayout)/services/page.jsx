@@ -1,6 +1,7 @@
 import React from 'react';
 import ServiceCard from './_component/ServiceCard';
 import Container from '@/components/shared/Container';
+import ServicesSearching from './_component/ServicesSearching';
 
 const getAllServices = async (searchParams) => {
     const getParams = new URLSearchParams(searchParams).toString();
@@ -25,6 +26,7 @@ const servicesPage = async ({ searchParams }) => {
         <Container>
             <div>
                 <h2 className='text-3xl font-bold text-purple-500 text-center mb-4'>services  Page</h2>
+                <ServicesSearching></ServicesSearching>
                 {services?.mata?.total === 0 ? (
                     <div className='text-4xl font-bold text-purple-500 text-center my-4'>
                         No data Found
