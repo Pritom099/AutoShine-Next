@@ -13,8 +13,9 @@ import {
     Droplets,
 } from "lucide-react";
 import BookingBtn from "../_component/BookingBtn";
+import { getSingleService } from "@/services/servicesAction";
 
-const getSingleService = async (id) => {
+/* const getSingleService = async (id) => {
     const res = await fetch(
         `https://car-washing-system-cleanify-server.vercel.app/api/v1/services/${id}`,
         { next: { revalidate: 60 } } // optional: revalidate every 60s
@@ -22,7 +23,7 @@ const getSingleService = async (id) => {
 
     const data = await res.json();
     return data;
-};
+}; */
 
 const ServiceDetailsPage = async ({ params }) => {
     const { slug } = await params;

@@ -2,20 +2,21 @@ import React from 'react';
 import ServiceCard from './_component/ServiceCard';
 import Container from '@/components/shared/Container';
 import ServicesSearching from './_component/ServicesSearching';
+import { getAllServices } from '@/services/servicesAction';
 
-const getAllServices = async (searchParams) => {
+/* const getAllServices = async (searchParams) => {
     const getParams = new URLSearchParams(searchParams).toString();
     console.log(getParams)
     const res = await fetch(`https://car-washing-system-cleanify-server.vercel.app/api/v1/services?${getParams}`);
-    /*    await new Promise((resolve) =>
+       await new Promise((resolve) =>
            setTimeout(() => {
                resolve();
            }, 3000)
-       ) */
+       ) 
 
     const data = await res.json();
     return data;
-}
+} */
 
 export const metadata = {
   title: "services",
