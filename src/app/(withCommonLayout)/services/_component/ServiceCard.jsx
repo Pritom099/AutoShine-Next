@@ -4,7 +4,7 @@ import { Clock, Star, Sparkles, Ban } from "lucide-react";
 import Link from "next/link";
 
 export default function ServiceCard({ service }) {
-    const isUnavailable = service.isDeleted;
+    const isUnavailable = service?.isDeleted;
 
     return (
         <div

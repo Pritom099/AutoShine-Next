@@ -12,7 +12,7 @@ const LoginPage = () => {
         const email = e.target.email.value;
         const password = e.target.password.value;
 
-        if(email === "pritom34@gmail.com" && password === "1234"){
+        if(email === "pritompaul515@gmail.com" && password === "1234"){
             const currentUser={
                 email,
                 name: email?.split("@")?.[0],

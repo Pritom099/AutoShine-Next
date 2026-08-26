@@ -1,7 +1,12 @@
 "use client"
-import React from 'react';
+import { BookingContext } from '@/context/bookingContext';
+import React, { use } from 'react';
 
-const BookingBtn = () => {
+const BookingBtn = ({ service }) => {
+    const { bookings, removeBooking, addBooking } = use(BookingContext);
+    const isAlreadyBooking = bookings?.find(b => b?._id === service?._id)
+    const isUnavailable = service.isDeleted;
+
     return (
         <button
             disabled={isUnavailable}
@@ -9,8 +14,9 @@ const BookingBtn = () => {
                 ? "cursor-not-allowed bg-slate-200 text-slate-400"
                 : "bg-slate-900 text-white shadow-lg shadow-slate-900/20 hover:bg-slate-800 hover:shadow-xl active:scale-[0.98]"
                 }`}
+            onClick={() => isAlreadyBooking ? removeBooking(service?._id) : addBooking(service)}
         >
-            {isUnavailable ? "Currently Unavailable" : "Book This Service"}
+            {isUnavailable ? "Service Unavailable" : isAlreadyBooking ? "Unbook This Service" : "Book This Service"}
         </button>
     );
 };

@@ -164,7 +164,7 @@ const ServiceDetailsPage = async ({ params }) => {
 
                         {/* Book Button */}
                         <div className="mt-10">
-                            <BookingBtn></BookingBtn>
+                            <BookingBtn service={service}></BookingBtn>
 
                             {!isUnavailable && (
                                 <p className="mt-3 text-sm text-slate-500">
