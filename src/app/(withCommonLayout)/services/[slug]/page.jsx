@@ -13,7 +13,7 @@ import {
     Droplets,
 } from "lucide-react";
 import BookingBtn from "../_component/BookingBtn";
-import { getSingleService } from "@/services/servicesAction";
+import { getSingleService } from "@/services/services.service";
 
 /* const getSingleService = async (id) => {
     const res = await fetch(
@@ -181,7 +181,7 @@ const ServiceDetailsPage = async ({ params }) => {
                     <h2 className="text-xl font-bold text-slate-900">About this service</h2>
 
                     <div
-                      className="mt-5 max-w-none text-base leading-7 text-slate-800"
+                        className="mt-5 max-w-none text-base leading-7 text-slate-800"
                         dangerouslySetInnerHTML={{ __html: service.description }}
                     />
                 </div>
