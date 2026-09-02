@@ -2,6 +2,8 @@ import { getAllReviews } from "@/services/reviews.service";
 import { Star, MessageSquare, User, Quote, Plus } from "lucide-react";
 import Link from "next/link";
 
+export const dynamic = "force-dynamic";
+
 const ReviewsPage = async () => {
     const reviewsData = await getAllReviews();
     const reviews = reviewsData?.reviews || [];
@@ -25,7 +27,7 @@ const ReviewsPage = async () => {
                         Real feedback from our valued customers
                     </p>
                     <Link
-                        href="/create-review"
+                        href="/reviews/create-review"
                         className="mt-8 mr-6 inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-purple-500 px-6 py-7 font-bold text-white shadow-sm transition hover:bg-purple-600"
                     >
                         <Plus />
