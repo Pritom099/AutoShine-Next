@@ -23,6 +23,8 @@ const Navbar = () => {
                         <Link href={"/services"}>Services</Link>
                         <Link href={"/reviews"}>Reviews</Link>
                         <Link href={"/aboutUs"}>About Us</Link>
+                        <Link href={"/adminRoute"}>Admin</Link>
+                        <Link href={"/userRoute"}>User</Link>
                     </ul>
 
                     {
@@ -36,7 +38,12 @@ const Navbar = () => {
                                 </Link>
                             </div>
                         ) :
-                            <button onClick={() => signIn()} className='primary-button'>Login</button>
+                            <div className='flex items-center gap-4'>
+                                <button onClick={() => signIn()} className='primary-button'>Login</button>
+                                <Link href={"/signup"} className='primary-button'>
+                                    <button >Register</button>
+                                </Link>
+                            </div>
                     }
                 </div>
             </Container>
