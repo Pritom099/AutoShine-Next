@@ -1,10 +1,15 @@
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import { getAllReviews } from "@/services/reviews.service";
-import { Star, MessageSquare, User, Quote, Plus } from "lucide-react";
+import { Star, MessageSquare, User, Quote, Plus, LogIn } from "lucide-react";
+import { getServerSession } from "next-auth";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
 const ReviewsPage = async () => {
+    const session = await getServerSession(authOptions);
+    const isLoggedIn = !!session?.user;
+
     const reviewsData = await getAllReviews();
     const reviews = reviewsData?.reviews || [];
 
@@ -26,13 +31,25 @@ const ReviewsPage = async () => {
                     <p className="mt-3 text-base text-slate-600">
                         Real feedback from our valued customers
                     </p>
-                    <Link
-                        href="/reviews/create-review"
-                        className="mt-8 mr-6 inline-flex items-center justify-center rounded-2xl border border-slate-200 bg-purple-500 px-6 py-7 font-bold text-white shadow-sm transition hover:bg-purple-600"
-                    >
-                        <Plus />
-                        Create a review
-                    </Link>
+                    <div className="mt-8">
+                        {isLoggedIn ? (
+                            <Link
+                                href="/reviews/create-review"
+                                className="inline-flex items-center gap-2 rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800"
+                            >
+                                <Plus className="h-4 w-4" />
+                                Create a review
+                            </Link>
+                        ) : (
+                            <Link
+                                href="/login"
+                                className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50"
+                            >
+                                <LogIn className="h-4 w-4" />
+                                Login to write a review
+                            </Link>
+                        )}
+                    </div>
 
                     {/* Rating Summary */}
                     {reviews.length > 0 && (
@@ -42,8 +59,8 @@ const ReviewsPage = async () => {
                                     <Star
                                         key={i}
                                         className={`h-5 w-5 ${i < Math.round(Number(averageRating))
-                                                ? "fill-current"
-                                                : "text-slate-200"
+                                            ? "fill-current"
+                                            : "text-slate-200"
                                             }`}
                                     />
                                 ))}
@@ -103,8 +120,8 @@ const ReviewsPage = async () => {
                                                 <Star
                                                     key={i}
                                                     className={`h-3.5 w-3.5 ${i < (review.rating || 0)
-                                                            ? "fill-amber-400 text-amber-400"
-                                                            : "text-slate-200"
+                                                        ? "fill-amber-400 text-amber-400"
+                                                        : "text-slate-200"
                                                         }`}
                                                 />
                                             ))}

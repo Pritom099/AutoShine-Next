@@ -8,7 +8,14 @@ import { signIn, signOut, useSession } from 'next-auth/react';
 
 const Navbar = () => {
     const { data: session, status } = useSession();
-    console.log(session)
+    const isLoggedIn = !!session?.user?.email;
+    const role = session?.user?.role || "user";
+
+    // role অনুযায়ী dashboard path
+    const dashboardHref =
+        role === "admin"
+            ? "/dashboard/adminRoute"
+            : "/dashboard/userRoute";
     return (
         <div className='bg-purple-500/20 text-white'>
             <Container>
@@ -23,24 +30,29 @@ const Navbar = () => {
                         <Link href={"/services"}>Services</Link>
                         <Link href={"/reviews"}>Reviews</Link>
                         <Link href={"/aboutUs"}>About Us</Link>
-                        <Link href={"/adminRoute"}>Admin</Link>
-                        <Link href={"/userRoute"}>User</Link>
+
                     </ul>
 
                     {
-                        status === "loading" ? (<button disabled>Loading....</button>) : session?.user?.email ? (
-                            <div className='flex items-center gap-4'>
-                                <button className='primary-button' onClick={() => signOut()}>
+                        status === "loading" ? (<button disabled>Loading....</button>) : isLoggedIn ? (
+                            <div className="flex items-center gap-3">
+                                <Link
+                                    href={dashboardHref}
+                                    className="secondary-button"
+                                >
+                                    Dashboard
+                                </Link>
+                                <button
+                                    onClick={() => signOut({ callbackUrl: "/" })}
+                                    className="secondary-button"
+                                >
                                     Sign Out
                                 </button>
-                                <Link href={"/dashboard"} className='primary-button'>
-                                    <button>Dashboard</button>
-                                </Link>
                             </div>
                         ) :
                             <div className='flex items-center gap-4'>
-                                <Link href={'/login'}  className='primary-button'>Login</Link>
-                                <Link href={"/signup"} className='primary-button'>
+                                <Link href={'/login'} className='secondary-button'>Login</Link>
+                                <Link href={"/signup"} className='secondary-button'>
                                     <button >Register</button>
                                 </Link>
                             </div>
