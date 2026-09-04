@@ -74,10 +74,12 @@ export const authOptions = {
         async redirect({ url, baseUrl }) {
             return baseUrl;
         },
-        async session({ session, token, user }) {
-            if (token?.role) {
+        async session({ session, token }) {
+            if (session.user) {
                 session.user.role = token.role;
+                session.user.phone = token.phone;
             }
+
             return session;
         },
         async jwt({ token, user }) {
@@ -88,6 +90,7 @@ export const authOptions = {
                 });
                 if (dbUser) {
                     token.role = dbUser.role;
+                    token.phone = dbUser.phone;
                 }
             }
             return token;

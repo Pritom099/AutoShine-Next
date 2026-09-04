@@ -20,7 +20,7 @@ export async function proxy(request) {
 
   // No login
   if (!token) {
-    const loginUrl = new URL("/api/auth/signin", request.url);
+    const loginUrl = new URL("/login", request.url);
 
     loginUrl.searchParams.set(
       "callbackUrl",
@@ -32,7 +32,7 @@ export async function proxy(request) {
 
   // No role
   if (!token.role || !roleBasedRoutes[token.role]) {
-    const loginUrl = new URL("/api/auth/signin", request.url);
+    const loginUrl = new URL("/login", request.url);
 
     loginUrl.searchParams.set(
       "callbackUrl",

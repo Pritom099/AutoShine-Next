@@ -1,11 +1,14 @@
+
 import DashboardSidebar from '@/components/shared/DashboardSidebar';
 import React from 'react';
 
-const layout = ({children}) => {
+const layout = ({ children }) => {
     return (
         <div className='flex gap-4'>
             <DashboardSidebar></DashboardSidebar>
-            <div className='ml-[200px]'>{children}</div>
+            <main className="ml-[200px] min-h-screen w-full">
+                {children}
+            </main>
         </div>
     );
 };

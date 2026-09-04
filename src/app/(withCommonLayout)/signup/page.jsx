@@ -72,10 +72,9 @@ const SignupPage = () => {
       return;
     }
 
-    alert("Account created successfully! Please log in.");
-    // router.push("/login");
-
+    alert("Account created successfully!");
     setIsSubmitting(false);
+    router.push("/");
   };
 
   return (

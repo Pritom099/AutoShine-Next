@@ -39,7 +39,7 @@ const Navbar = () => {
                             </div>
                         ) :
                             <div className='flex items-center gap-4'>
-                                <button onClick={() => signIn()} className='primary-button'>Login</button>
+                                <Link href={'/login'}  className='primary-button'>Login</Link>
                                 <Link href={"/signup"} className='primary-button'>
                                     <button >Register</button>
                                 </Link>

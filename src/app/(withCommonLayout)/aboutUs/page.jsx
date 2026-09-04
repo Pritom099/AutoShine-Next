@@ -79,7 +79,7 @@ const AboutUsPage = () => {
               { value: "5K+", label: "Cars Washed", icon: Droplets },
               { value: "98%", label: "Happy Clients", icon: Heart },
               { value: "12+", label: "Services", icon: Sparkles },
-              { value: "4.9", label: "Average Rating", icon: Award },
+              { value: "4.00", label: "Average Rating", icon: Award },
             ].map((stat) => (
               <div
                 key={stat.label}
