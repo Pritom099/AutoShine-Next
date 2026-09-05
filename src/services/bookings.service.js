@@ -2,7 +2,7 @@
 
 import { revalidateTag } from "next/cache";
 
-const BASE = process.env.NEXT_AUTH_URL || "http://localhost:3000";
+const BASE = process.env.NEXT_AUTH_URL || "https://autoshine-next.vercel.app";
 
 export const createBooking = async (serviceData) => {
   const res = await fetch(`${BASE}/api/bookings`, {

@@ -2,7 +2,7 @@
 
 export const signup = async (data) => {
   const res = await fetch(
-    `${process.env.NEXT_AUTH_URL || "http://localhost:3000"}/api/users`,
+    `${process.env.NEXT_AUTH_URL || "https://autoshine-next.vercel.app"}/api/users`,
     {
       method: "POST",
       headers: {

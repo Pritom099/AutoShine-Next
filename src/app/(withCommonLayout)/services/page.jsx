@@ -29,9 +29,9 @@ const servicesPage = async ({ searchParams }) => {
 
 
     return (
-        <Container>
+        <Container >
             <div>
-                <h2 className='text-3xl font-bold text-purple-500 text-center mb-4'>services  Page</h2>
+                <h2 className='text-5xl font-bold text-white text-center my-9'>Services</h2>
                 <ServicesSearching></ServicesSearching>
                 {services?.mata?.total === 0 ? (
                     <div className='text-4xl font-bold text-purple-500 text-center my-4'>
