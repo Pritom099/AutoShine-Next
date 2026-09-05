@@ -1,58 +1,63 @@
 "use server";
 
-import { revalidateTag } from "next/cache";
-
-function getBaseUrl() {
-  // 1) Production / local — env থেকে
-  if (process.env.NEXTAUTH_URL) {
-    return process.env.NEXTAUTH_URL.replace(/\/$/, "");
-  }
-  // 2) Vercel auto URL
-  if (process.env.VERCEL_URL) {
-    return `https://${process.env.VERCEL_URL}`;
-  }
-  // 3) Local
-  return "https://autoshine-next.vercel.app";
-}
+import { dbConnect } from "@/lib/dbConnect";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 export const createReview = async (data) => {
-  const res = await fetch(`${getBaseUrl()}/api/reviews`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  });
+  try {
+    const reviews = await dbConnect("reviews");
 
-  if (!res.ok) {
-    throw new Error("Failed to create review");
+    const newReview = {
+      name: data.name,
+      rating: Number(data.rating),
+      comment: data.comment,
+      email: data.email || null,
+      createdAt: new Date(),
+    };
+
+    const result = await reviews.insertOne(newReview);
+
+    revalidateTag("reviews");
+    revalidatePath("/reviews");
+    revalidatePath("/");
+
+    return {
+      message: "Review created successfully",
+      status: 201,
+      review: {
+        ...newReview,
+        _id: result.insertedId.toString(),
+      },
+    };
+  } catch (error) {
+    console.error("createReview error:", error);
+    return {
+      message: "Failed to create review",
+      status: 500,
+    };
   }
-
-  revalidateTag("reviews");
-  return res.json();
 };
 
-export const getAllReviews = async (searchParams) => {
+export const getAllReviews = async () => {
   try {
-    const getParams = new URLSearchParams(searchParams || {}).toString();
-    const url = `${getBaseUrl()}/api/reviews${getParams ? `?${getParams}` : ""}`;
+    const reviews = await dbConnect("reviews");
+    const all = await reviews.find({}).sort({ createdAt: -1 }).toArray();
 
-    const res = await fetch(url, {
-      next: {
-        tags: ["reviews"],
-        revalidate: 60,
-      },
-    });
+    // ObjectId → string (Next.js serialize এর জন্য)
+    const plain = all.map((r) => ({
+      ...r,
+      _id: r._id.toString(),
+    }));
 
-    const contentType = res.headers.get("content-type") || "";
-
-    // HTML এলে crash না — খালি data return
-    if (!res.ok || !contentType.includes("application/json")) {
-      console.error("getAllReviews: non-JSON response", res.status, url);
-      return { reviews: [], message: "Failed to load reviews" };
-    }
-
-    return await res.json();
+    return {
+      message: "Reviews retrieved successfully!",
+      reviews: plain,
+    };
   } catch (error) {
     console.error("getAllReviews error:", error);
-    return { reviews: [], message: "Failed to load reviews" };
+    return {
+      message: "Failed to load reviews",
+      reviews: [],
+    };
   }
 };

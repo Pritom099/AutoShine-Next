@@ -56,13 +56,13 @@ const CreateReviewPage = () => {
 
       const res = await createReview(reviewData);
 
-      if (res?.message) {
+      if (res?.status === 201 || res?.message?.toLowerCase?.().includes("success")) {
         setSuccess(true);
         setRating(0);
         setComment("");
         setName(session?.user?.name || "");
       } else {
-        setError("Failed to submit review. Please try again.");
+        setError(res?.message || "Failed to submit review. Please try again.");
       }
     } catch (err) {
       console.error(err);
@@ -198,11 +198,10 @@ const CreateReviewPage = () => {
                   className="rounded-lg p-1 transition hover:scale-110"
                 >
                   <Star
-                    className={`h-8 w-8 transition-colors ${
-                      star <= (hoverRating || rating)
+                    className={`h-8 w-8 transition-colors ${star <= (hoverRating || rating)
                         ? "fill-amber-400 text-amber-400"
                         : "text-slate-200"
-                    }`}
+                      }`}
                   />
                 </button>
               ))}
