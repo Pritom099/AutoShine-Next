@@ -1,6 +1,7 @@
 "use client";
 
 import { signup } from "@/services/users.service";
+import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -31,7 +32,7 @@ const SignupPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
- 
+
     const formData = new FormData(e.target);
     const name = formData.get("name");
     const email = formData.get("email");
@@ -63,18 +64,38 @@ const SignupPage = () => {
 
     console.log(currentUser);
 
-    const res = await signup(currentUser);
-    //console.log(res, "res from signup");
+    try {
+      // 1) Account create
+      const res = await signup(currentUser);
 
-    if (res.status !== 201) {
-      alert(res.message || "Failed to create account.");
+      if (res.status !== 201) {
+        alert(res.message || "Failed to create account.");
+        setIsSubmitting(false);
+        return;
+      }
+
+      // 2) Auto login → session তৈরি
+      const loginRes = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
+
+      if (loginRes?.error) {
+        alert("Account created! Please login.");
+        router.push("/login");
+        return;
+      }
+
+      // 3) Logged in → dashboard
+      router.push("/");
+      router.refresh();
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong.");
+    } finally {
       setIsSubmitting(false);
-      return;
     }
-
-    alert("Account created successfully!");
-    setIsSubmitting(false);
-    router.push("/");
   };
 
   return (

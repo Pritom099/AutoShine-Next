@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { use } from "react";
+import { use, useEffect, useState } from "react";
 import { BookingContext } from "@/context/bookingContext";
 import {
   LayoutDashboard,
@@ -17,10 +17,42 @@ import {
 } from "lucide-react";
 
 const UserRoute = ({ user, services = [], reviews = [] }) => {
-  const { bookings } = use(BookingContext);
-  const validBookings = bookings?.filter(Boolean) || [];
+  const { bookings, setBookings } = use(BookingContext);
+  const [loadingBookings, setLoadingBookings] = useState(true);
 
-  // Safe arrays — undefined হলেও crash করবে না
+  // Dashboard-এ ঢুকলেই Mongo থেকে fresh bookings নাও
+  useEffect(() => {
+    const loadBookings = async () => {
+      setLoadingBookings(true);
+      try {
+        const res = await fetch("/api/bookings");
+        if (!res.ok) return;
+
+        const data = await res.json();
+        if (data?.bookings) {
+          setBookings(
+            data.bookings.map((b) => ({
+              _id: b.serviceId,
+              name: b.serviceName,
+              price: b.price,
+              duration: b.duration,
+              img: b.img,
+              description: b.description,
+              status: b.status,
+            }))
+          );
+        }
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoadingBookings(false);
+      }
+    };
+
+    loadBookings();
+  }, [setBookings]);
+
+  const validBookings = bookings?.filter(Boolean) || [];
   const safeServices = Array.isArray(services) ? services : [];
   const safeReviews = Array.isArray(reviews) ? reviews : [];
 
@@ -38,7 +70,7 @@ const UserRoute = ({ user, services = [], reviews = [] }) => {
       value: validBookings.length,
       icon: Calendar,
       color: "bg-blue-50 text-blue-600",
-      href: "/my-bookings",
+      href: "/dashboard/my-bookings",
     },
     {
       title: "Available Services",
@@ -65,13 +97,13 @@ const UserRoute = ({ user, services = [], reviews = [] }) => {
 
   const quickLinks = [
     { title: "Browse Services", href: "/services", icon: Car },
-    { title: "My Bookings", href: "/my-bookings", icon: Calendar },
+    { title: "My Bookings", href: "/dashboard/my-bookings", icon: Calendar },
     {
       title: "Write a Review",
       href: "/reviews/create-review",
       icon: MessageSquare,
     },
-    { title: "My Profile", href: "/profile", icon: User },
+    { title: "My Profile", href: "/dashboard/profile", icon: User },
   ];
 
   return (
@@ -80,7 +112,6 @@ const UserRoute = ({ user, services = [], reviews = [] }) => {
         {/* Header */}
         <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-4">
-            {/* relative + fixed size = fill Image ঠিক কাজ করবে */}
             <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-2xl bg-slate-200">
               {user?.image ? (
                 <Image
@@ -147,14 +178,18 @@ const UserRoute = ({ user, services = [], reviews = [] }) => {
             <div className="flex items-center justify-between border-b border-slate-100 px-5 py-4">
               <h2 className="font-semibold text-slate-900">My Bookings</h2>
               <Link
-                href="/my-bookings"
+                href="/dashboard/my-bookings"
                 className="text-sm font-medium text-slate-500 hover:text-slate-900"
               >
                 View all
               </Link>
             </div>
             <div className="p-5">
-              {validBookings.length === 0 ? (
+              {loadingBookings ? (
+                <p className="py-8 text-center text-sm text-slate-500">
+                  Loading bookings...
+                </p>
+              ) : validBookings.length === 0 ? (
                 <div className="flex flex-col items-center py-10 text-center">
                   <PackageOpen className="h-10 w-10 text-slate-300" />
                   <p className="mt-3 text-sm text-slate-500">No bookings yet</p>

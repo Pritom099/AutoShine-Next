@@ -62,7 +62,7 @@ export async function DELETE(request, { params }) {
     const filter = {_id: new ObjectId(id)};
 
     const reviewsRes = await dbConnect("reviews")
-    const reviews = await reviewsRes.deleteOne(filterc);
+    const reviews = await reviewsRes.deleteOne(filter);
     return Response.json({
         reviews,
         message: "Review deleted successfully!",

@@ -11,10 +11,10 @@ const DashboardSidebar = () => {
             </Link>
 
             <div className='flex flex-col gap-2 mt-7'>
-                <Link className='font-semibold text-xl' href={"/dashboard/profile"}>Profile</Link>
+                <Link  className='font-semibold text-xl' href={"/dashboard/adminRoute"}>AdminDashboard</Link>
+                <Link  className='font-semibold text-xl' href={"/dashboard/userRoute"}>UserDashboard</Link>
                 <Link className='font-semibold text-xl' href={"/dashboard/my-bookings"}>My Booking</Link>
-                <Link  className='font-semibold text-xl' href={"/dashboard/adminRoute"}>Admin</Link>
-                <Link  className='font-semibold text-xl' href={"/dashboard/userRoute"}>User</Link>
+                <Link className='font-semibold text-xl' href={"/dashboard/profile"}>Profile</Link>
             </div>
 
         </div>
